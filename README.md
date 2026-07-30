@@ -143,24 +143,46 @@ python raht/tune.py                   # Optuna search
 
 ### Walk-Forward Validation (4 folds)
 
-| Fold | Period | Train | Val | Test |
-|------|--------|-------|-----|------|
-| 1 | 2018–2020 | 2018–2019 | 2020H1 | 2020H2 |
-| 2 | 2018–2022 | 2018–2021Q1 | 2021 | 2022H1 |
-| 3 | 2018–2023 | 2018–2022Q1 | 2022 | 2023H1 |
-| 4 | 2018–2024 | 2018–2023Q1 | 2023 | 2024H1 |
+| Fold | Testing Period | Market Context |
+|------|-----------------|----------------|
+| 1 | 2020H2 | COVID-19 Recovery |
+| 2 | 2022H1 | Monetary Tightening |
+| 3 | 2023H1 | Inflationary Bear |
+| 4 | 2024H1 | AI-Led Expansion |
 
-> Purge gap = 5 ngày giữa train/val và val/test để tránh data leakage.
+> Purge gap = 5 ngày giữa train/val và val/test để tránh data leakage. Dataset: 2018-01-01 đến 2025-01-01 (T = 1,704 effective timesteps sau sliding window 60 ngày).
 
-### Kết quả thực nghiệm (Kaggle T4 GPU)
+### Kết quả thực nghiệm (Kaggle Dual T4 GPU)
 
-| Fold | Pair Acc | IC | ERS/5d | Ann. ERS |
-|------|----------|----|--------|----------|
-| 1 | 51.21% | 0.0324 | +9.64% | +10213% |
-| 2 | 51.17% | 0.0325 | +3.40% | +438% |
-| 3 | 51.32% | 0.0377 | +3.75% | +540% |
-| 4 | ~51% | ~0.035 | ~+3% | — |
-| **Mean** | **~51.2%** | **~0.034** | **~+5%** | — |
+| Fold | Pair Acc | IC | Dir Acc | ERS/5d |
+|------|----------|-----|---------|--------|
+| 1 (2020H2) | 52.56% | 0.0713 | 52.24% | +0.96 |
+| 2 (2022H1) | 52.10% | 0.0579 | 51.25% | +0.69 |
+| 3 (2023H1) | 50.94% | 0.0272 | 50.12% | +0.49 |
+| 4 (2024H1) | 53.17% | 0.0899 | 52.27% | +0.84 |
+| **Mean** | **52.19%** | **0.0616** | **51.47%** | **+0.74** |
+
+> ERS (Expected Return Spread) tính trên thang cross-sectional rank-normalized (+1.0 = rank cao nhất, −1.0 = rank thấp nhất), không phải % lợi nhuận thực tế.
+
+### So sánh với baseline nội bộ
+
+| Model | Pair Acc | IC | Thành phần bị bỏ |
+|-------|----------|-----|-------------------|
+| Random Baseline | 50.00% | 0.000 | — |
+| Sequential LSTM | 50.66% | 0.019 | Relational context & GNN layers |
+| Static Graph Baseline | 51.15% | 0.031 | Dynamic topology & regime fusion |
+| **RAHT-Graph (full)** | **52.19%** | **0.0616** | — |
+
+### Ablation study (so với full model)
+
+| Biến thể | Pair Acc | IC | ΔIC |
+|----------|----------|-----|-----|
+| w/o Graph (Sequential only) | 50.66% | 0.0192 | −0.0424 |
+| w/o VSN (GRU encoder) | 51.28% | 0.0352 | −0.0264 |
+| w/o Dynamic Edges (Static) | 51.15% | 0.0387 | −0.0229 |
+| w/o Regime Fusion | 51.43% | 0.0441 | −0.0175 |
+| w/o Recency Weighting | 51.61% | 0.0463 | −0.0153 |
+| w/o Sector-Aware Loss | 51.82% | 0.0510 | −0.0106 |
 
 ---
 
