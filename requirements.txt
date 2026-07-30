@@ -1,0 +1,20 @@
+# Core deep learning
+torch>=2.5.0
+torch-geometric>=2.7.0
+
+# PyG sparse ops (install from PyG wheel server)
+# pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv \
+#   -f https://data.pyg.org/whl/torch-2.5.1+cu124.html
+
+# Data & features
+yfinance>=0.2.60
+pandas>=2.0.0
+numpy>=1.25.0
+scikit-learn>=1.4.0
+statsmodels>=0.14.0
+
+# Hyperparameter tuning
+optuna>=4.0.0
+
+# Utilities
+tqdm>=4.66.0

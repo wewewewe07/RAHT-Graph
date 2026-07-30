@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data files (large, generated)
+data/raw/
+data/processed/
+data/hetero_graph.pt
+data/*.csv
+data/*.pt
+
+# Model checkpoints
+model/
+*.pth
+*.ckpt
+
+# Tuning artifacts
+tune_results.json
+
+# Results
+results/
+*.json
+
+# OS
+.DS_Store
+Thumbs.db
+*.lnk
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
